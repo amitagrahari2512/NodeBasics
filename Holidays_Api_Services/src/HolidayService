@@ -1,0 +1,36 @@
+var fs = require('fs');
+var readFile= async () => {
+        return await fs.readFileSync('../res/HolidaysList.json');
+}
+var holidayService = {
+            public : async function (publicMonth) { 
+                //console.log('publicMonth: ' + publicMonth);
+                let holiday = await readFile().catch(function (error) {
+                    console.info(error)
+                    return Promise.reject(error);
+                });
+                holiday = JSON.parse(holiday);
+                let returnData = holiday['public'][publicMonth];
+                if(!returnData)
+                {
+                    returnData = [];
+                }
+                return returnData;
+            },
+            flexible : async function (flexibleMonth) { 
+                //console.log('flexibleMonth: ' + flexibleMonth);
+                let holiday = await readFile().catch(function (error) {
+                    console.info(error)
+                    return Promise.reject(error);
+                });
+                holiday = JSON.parse(holiday);
+                let returnData = holiday['flexible'][flexibleMonth];
+                if(!returnData)
+                {
+                    returnData = [];
+                }
+                return returnData;
+            }
+}
+
+module.exports = holidayService

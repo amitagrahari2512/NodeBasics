@@ -1,0 +1,48 @@
+const http = require('http');
+const url = require('url');
+const holidayService = require('./HolidayService');
+
+const hostname = '127.0.0.1';
+const port = 9091;
+
+const server = http.createServer(async (request, response) => {
+    var urlData = request.url;
+    //console.info(urlData);
+    var query = url.parse(request.url,true).query;
+    var jsonString = JSON.stringify(query)
+    //console.info(jsonString)
+    if(jsonString != '{}' && jsonString.includes('month'))
+    {
+        var monthName = query['month'];
+        //console.info(monthName);
+        if(monthName == null || monthName == '')
+        {
+            response.writeHead(404, { 'Content-Type': 'text/html' }); 
+            response.write('<html><body><p>Request Is incorrect,Please provide month name</p></body></html>');
+            response.end();
+        }
+        else { 
+            let responseData ;
+                if(request.url.includes('/public'))
+                {
+                    responseData = await holidayService.public(monthName);
+                }
+                else if(request.url.includes('/flexible'))
+                {
+                    responseData = await holidayService.flexible(monthName);
+                }
+                response.writeHead(200, { 'Content-Type': 'application/json' });   
+                response.write(JSON.stringify(responseData));
+                response.end();
+            }
+        }
+        else{
+            response.writeHead(404, { 'Content-Type': 'text/html' }); 
+            response.write('<html><body><p>Request Is incorrect,We accept month as a query param</p></body></html>');
+            response.end();
+        }
+    
+});
+server.listen(port,hostname);
+
+console.log('Server running at http://' + hostname + ':' + port + '/');
