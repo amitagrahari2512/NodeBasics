@@ -1,0 +1,33 @@
+var http = require('http');
+
+var cityName = process.argv[2];
+if(!cityName || cityName.trim()=='')
+{
+    console.info("Please provide city name in arguments");
+}
+else 
+{
+    var url = '/data/2.5/weather?q='
+    var getRequest = {
+        host : 'api.openweathermap.org',
+        path : url + cityName.trim() + '&appid=2b421cd305b88e39d4182ac89b85e186',
+        method : 'GET'
+    };
+
+    //console.info (getRequest);
+
+    var reqGet = http.request (getRequest, function(res) {
+        //console.log("statusCode: ", res.statusCode);
+        res.on('data', function(weatherData) {
+            console.info('------------------------------Weather Info:-------------------------\n');
+            process.stdout.write(weatherData);
+            console.info('--------------------------------------------------------------------');
+        });
+    });
+    reqGet.end();
+    reqGet.on('error', function(err) {
+        console.error(err);
+    });
+}
+
+

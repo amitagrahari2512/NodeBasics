@@ -1,0 +1,74 @@
+var http = require('http');
+var url = require('url');
+var fs = require('fs');
+
+var server = http.createServer((request, response) => {
+    var urlData = request.url;
+    console.info(urlData);
+    var query = url.parse(request.url,true).query;
+    var jsonString = JSON.stringify(query)
+    console.info(jsonString)
+    if(jsonString != '{}' && jsonString.includes('month'))
+    {
+        var monthName = query['month'];
+        console.info(monthName);
+        if(monthName == null || monthName == '')
+        {
+            response.writeHead(404, { 'Content-Type': 'text/html' }); 
+            
+            // set response content    
+            response.write('<html><body><p>Request Is incorrect,Please provide month name</p></body></html>');
+            response.end();
+        }
+        else { 
+                if(request.url.includes('/public'))
+                {
+                    //holidayService.public(monthName);
+                    fs.readFile('../res/HolidaysList.json', (err, data) => {
+                        if (err) throw err;
+                        var holiday = JSON.parse(data);
+                        var returnData = holiday['public'][monthName];
+                        console.log(returnData);
+                        if(returnData == undefined)
+                        {
+                            returnData = [];
+                        }
+                        response.writeHead(200, { 'Content-Type': 'application/json' }); 
+                    
+                        // set response content    
+                        response.write(JSON.stringify(returnData));
+                        response.end();
+                    });
+                    
+                }
+                else if(request.url.includes('/flexible'))
+                {
+                    //holidayService.public(monthName);
+                    fs.readFile('../res/HolidaysList.json', (err, data) => {
+                        if (err) throw err;
+                        var holiday = JSON.parse(data);
+                        var returnData = holiday['flexible'][monthName];
+                        console.log(returnData);
+                        if(returnData == undefined)
+                        {
+                            returnData = [];
+                        }
+                        response.writeHead(200, { 'Content-Type': 'application/json' }); 
+                    
+                        // set response content    
+                        response.write(JSON.stringify(returnData));
+                        response.end();
+                    });
+                }
+            }
+        }
+        else{
+            response.writeHead(404, { 'Content-Type': 'text/html' }); 
+            
+            // set response content    
+            response.write('<html><body><p>Request Is incorrect,We accept month as a query param</p></body></html>');
+            response.end();
+        }
+    
+});
+server.listen(3000);

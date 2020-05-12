@@ -1,0 +1,24 @@
+var fs = require('fs');
+var readFile= () => {
+        fs.readFileSync('../res/HolidaysList.json', (err, data) => {
+        if (err) throw err;
+        var holiday = JSON.parse(data);
+        //console.info(holiday)
+        return holiday;
+    });
+}
+var holidayService = {
+            public: function (publicMonth) { 
+                console.log('publicMonth: ' + publicMonth);
+                fs.readFileSync('../res/HolidaysList.json', (err, data) => {
+                    if (err) throw err;
+                    var holiday = JSON.parse(data);
+                    //console.info(holiday)
+                })
+            },
+            flexible:function (flexibleMonth) { 
+                console.log('flexibleMonth: ' + flexibleMonth);
+            }
+}
+
+module.exports = holidayService

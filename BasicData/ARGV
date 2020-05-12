@@ -1,0 +1,10 @@
+//node ARGV "1" "2" "3"
+
+var i = Number(process.argv[2])
+var j = Number(process.argv[3])
+var k = Number(process.argv[4])
+
+var z =i+j+k;
+
+console.log(z);
+

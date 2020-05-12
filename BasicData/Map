@@ -1,0 +1,11 @@
+var squares = [1,2,3].map(function(n) {
+    return n*n;
+});
+
+console.log(squares);
+
+var squares = [1,2,3].map(n => {
+    return n*n;
+});
+
+console.log(squares);
